@@ -62,7 +62,7 @@ userSchema.virtual("age").get(function () {
 
   if (
     today.getMonth() < dob.getMonth() ||
-    (today.getMonth() === dob.getMonth() && today.getDay() < dob.getDay())
+    (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())
   ) {
     age--;
   }

@@ -40,7 +40,7 @@ userSchema.virtual("age").get(function () {
     const dob = this.dob;
     let age = today.getFullYear() - dob.getFullYear();
     if (today.getMonth() < dob.getMonth() ||
-        (today.getMonth() === dob.getMonth() && today.getDay() < dob.getDay())) {
+        (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())) {
         age--;
     }
     return age;
