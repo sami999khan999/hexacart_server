@@ -1,9 +1,40 @@
 import mongoose from "mongoose";
-export const connectDB = () => {
+import { nodeCache } from "../app.js";
+import { Product } from "../models/product.js";
+export const connectDB = (uri) => {
     mongoose
-        .connect("mongodb+srv://sami999khan999:W8RuKzou1CQkJknP@cluster0.6pfto8i.mongodb.net/?retryWrites=true&w=majority", {
+        .connect(uri, {
         dbName: "hexa_cart",
     })
         .then((c) => console.log(`DB Connected to ${c.connection.host}`))
         .catch((e) => console.log(e));
+};
+export const invalidateCache = async ({ product, order, admin, }) => {
+    if (product) {
+        const productKey = [
+            "latest-product",
+            "catagories",
+            "all-products",
+        ];
+        const products = await Product.find({}).select("_id");
+        products.forEach((i) => {
+            productKey.push(`product-${i._id}`);
+        });
+        nodeCache.del(productKey);
+    }
+    if (order) {
+    }
+    if (admin) {
+    }
+};
+export const reduceStock = async (orderItems) => {
+    for (let i = 0; i < orderItems.length; i++) {
+        const order = orderItems[i];
+        const product = await Product.findById(order.productId);
+        if (!product) {
+            throw new Error("Product not Found!");
+        }
+        product.stock -= order.quantity;
+        await product.save();
+    }
 };
