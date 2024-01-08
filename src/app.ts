@@ -18,6 +18,9 @@ app.use(express.json());
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/product", productRoute);
 
+// image routes
+app.use("/uploads", express.static("uploads"));
+
 // error middleware
 app.use(errorMiddleware);
 

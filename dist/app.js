@@ -12,6 +12,8 @@ app.use(express.json());
 // Routes
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/product", productRoute);
+// image routes
+app.use("/uploads", express.static("uploads"));
 // error middleware
 app.use(errorMiddleware);
 app.listen(port, () => {
