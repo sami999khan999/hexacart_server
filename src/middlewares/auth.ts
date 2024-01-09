@@ -12,7 +12,7 @@ export const adminOnly = TryCatch(async (req, res, next) => {
   const user = await User.findById(id);
 
   if (!user) {
-    return next(new ErrorHandeler("Accoutn does not exists!", 401));
+    return next(new ErrorHandeler("Account does not exists!", 401));
   }
 
   if (user.role != "admin") {

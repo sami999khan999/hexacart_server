@@ -8,7 +8,7 @@ export const newOrder = TryCatch(async (req, res, next) => {
     if (!shippingInfo || !orderItems || !user || !subtotal || !tax || !total) {
         return next(new ErrorHandeler("Please Enter All Fields", 400));
     }
-    await Order.create({
+    const order = await Order.create({
         shippingInfo,
         orderItems,
         user,
@@ -19,7 +19,13 @@ export const newOrder = TryCatch(async (req, res, next) => {
         total,
     });
     await reduceStock(orderItems);
-    await invalidateCache({ product: true, order: true, admin: true });
+    await invalidateCache({
+        product: true,
+        order: true,
+        admin: true,
+        userId: user,
+        productId: order.orderItems.map((i) => String(i.productId)),
+    });
     return res.status(201).json({
         success: true,
         message: "Order Placed Successfully ",
@@ -39,5 +45,86 @@ export const myOrders = TryCatch(async (req, res, next) => {
     return res.status(200).json({
         success: true,
         orders,
+    });
+});
+export const allOrders = TryCatch(async (req, res, next) => {
+    let orders = [];
+    const key = "all-orders";
+    if (nodeCache.has(key)) {
+        orders = JSON.parse(nodeCache.get(key));
+    }
+    else {
+        orders = await Order.find({}).populate("user", "name");
+        nodeCache.set(key, JSON.stringify(orders));
+    }
+    return res.status(200).json({
+        success: true,
+        orders,
+    });
+});
+export const getSingleOrder = TryCatch(async (req, res, next) => {
+    const id = req.params.id;
+    const key = `order-${id}`;
+    let order;
+    if (nodeCache.has(key)) {
+        order = JSON.parse(nodeCache.get(key));
+    }
+    else {
+        order = await Order.findById(id).populate("user", "name");
+        if (!order)
+            return next(new ErrorHandeler("Order not found", 404));
+        nodeCache.set(key, JSON.stringify(order));
+    }
+    return res.status(200).json({
+        success: true,
+        order,
+    });
+});
+export const porcessOrder = TryCatch(async (req, res, next) => {
+    const id = req.params.id;
+    const order = await Order.findById(id);
+    if (!order)
+        return next(new ErrorHandeler("Order not found", 404));
+    switch (order.status) {
+        case "Processing":
+            order.status = "Shipped";
+            break;
+        case "Shipped":
+            order.status = "Delivered";
+            break;
+        default:
+            order.status = "Delivered";
+            break;
+    }
+    await order.save();
+    await invalidateCache({
+        product: true,
+        order: true,
+        admin: true,
+        orderId: String(order._id),
+        userId: String(order.user),
+    });
+    return res.status(200).json({
+        success: true,
+        message: "Order Processed Successfully",
+    });
+});
+export const deleteOrder = TryCatch(async (req, res, next) => {
+    const id = req.params.id;
+    const order = await Order.findById(id);
+    if (!order) {
+        return next(new ErrorHandeler("Order Not Found", 404));
+    }
+    await order.deleteOne();
+    await invalidateCache({
+        product: false,
+        order: true,
+        admin: true,
+        orderId: String(order._id),
+        userId: String(order.user),
+    });
+    return res.status(200).json({
+        success: true,
+        message: "Order Deleted Successfully",
     });
 });
