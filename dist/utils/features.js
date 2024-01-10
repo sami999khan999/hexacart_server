@@ -34,6 +34,7 @@ export const invalidateCache = async ({ product, order, admin, productId, orderI
         nodeCache.del(ordersKeys);
     }
     if (admin) {
+        nodeCache.del([]);
     }
 };
 export const reduceStock = async (orderItems) => {
@@ -46,4 +47,38 @@ export const reduceStock = async (orderItems) => {
         product.stock -= order.quantity;
         await product.save();
     }
+};
+export const calculatePercentage = (thisMonth, lastMonth) => {
+    if (lastMonth === 0) {
+        return thisMonth * 100;
+    }
+    const percent = (thisMonth / lastMonth) * 100;
+    return Number(percent.toFixed(0));
+};
+export const getCatagories = async ({ catagories, productsCount, }) => {
+    const catagoriesCountPromise = catagories.map((catagory) => Product.countDocuments({ catagory }));
+    const catagoriesCount = await Promise.all(catagoriesCountPromise);
+    const catagoryCount = [];
+    catagories.forEach((catagory, i) => {
+        catagoryCount.push({
+            [catagory]: Math.round((catagoriesCount[i] / productsCount) * 100),
+        });
+    });
+    return catagoryCount;
+};
+export const getChartData = ({ length, docArr, today, property, }) => {
+    const data = new Array(length).fill(0);
+    docArr.forEach((i) => {
+        const creationDate = i.createdAt;
+        const monthDiff = (today.getMonth() - creationDate.getMonth() + 12) % 12;
+        if (monthDiff < length) {
+            if (property) {
+                data[length - monthDiff - 1] += i[property];
+            }
+            else {
+                data[length - monthDiff - 1] += 1;
+            }
+        }
+    });
+    return data;
 };

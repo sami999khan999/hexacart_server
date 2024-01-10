@@ -98,7 +98,7 @@ export const porcessOrder = TryCatch(async (req, res, next) => {
     }
     await order.save();
     await invalidateCache({
-        product: true,
+        product: false,
         order: true,
         admin: true,
         orderId: String(order._id),

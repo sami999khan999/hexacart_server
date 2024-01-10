@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const couponSchema = new Schema(
   {
-    coupon: {
+    code: {
       type: String,
       required: [true, "Please Enter the Coupon Code"],
       unique: true,
@@ -18,3 +18,5 @@ const couponSchema = new Schema(
     timestamps: true,
   }
 );
+
+export const Coupon = mongoose.model("Coupon", couponSchema);
