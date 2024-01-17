@@ -5,6 +5,7 @@ import NodeCache from "node-cache";
 import { config } from "dotenv";
 import morgan from "morgan";
 import Stripe from "stripe";
+import cors from "cors";
 // route path
 import userRoute from "./routes/user.js";
 import productRoute from "./routes/products.js";
@@ -24,6 +25,7 @@ const app = express();
 // middlewares
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(cors());
 // Routes
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/product", productRoute);
