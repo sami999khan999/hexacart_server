@@ -29,7 +29,7 @@ const orderSchema = new Schema(
     user: {
       type: String,
       ref: "User",
-      require: true,
+      required: true,
     },
     subtotal: {
       type: Number,

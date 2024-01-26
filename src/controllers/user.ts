@@ -15,7 +15,7 @@ export const newUser = TryCatch(
 
     let user = await User.findById(_id);
 
-    if (!name || !email || !photo || !gender || !_id || !dob)
+    if (!name || !email || !photo || !_id)
       return next(new ErrorHandeler("All fields must be fieled!", 400));
 
     if (user) {
@@ -47,7 +47,6 @@ export const getAllUsers = TryCatch(async (req, res, next) => {
   return res.status(200).json({
     success: true,
     users,
-    length,
   });
 });
 

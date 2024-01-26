@@ -34,7 +34,12 @@ export const invalidateCache = async ({ product, order, admin, productId, orderI
         nodeCache.del(ordersKeys);
     }
     if (admin) {
-        nodeCache.del([]);
+        nodeCache.del([
+            "admin-stats",
+            "admin-pie-charts",
+            "admin-bar-charts",
+            "admin-line-charts",
+        ]);
     }
 };
 export const reduceStock = async (orderItems) => {

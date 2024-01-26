@@ -253,7 +253,7 @@ export const getBarCharts = TryCatch(async (req, res, next) => {
         const orderCount = getChartData({ length: 12, today, docArr: orders });
         charts = {
             users: userCount,
-            product: productCount,
+            products: productCount,
             orders: orderCount,
         };
         nodeCache.set("admin-bar-charts", JSON.stringify(charts));

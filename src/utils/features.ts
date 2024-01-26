@@ -52,7 +52,12 @@ export const invalidateCache = async ({
   }
 
   if (admin) {
-    nodeCache.del([]);
+    nodeCache.del([
+      "admin-stats",
+      "admin-pie-charts",
+      "admin-bar-charts",
+      "admin-line-charts",
+    ]);
   }
 };
 

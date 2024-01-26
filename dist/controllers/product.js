@@ -22,7 +22,7 @@ export const newProduct = TryCatch(async (req, res, next) => {
         stock,
         photo: photo?.path,
     });
-    await invalidateCache({ product: true });
+    await invalidateCache({ product: true, admin: true });
     return res.status(201).json({
         success: true,
         message: "Product Created Successfully",
@@ -35,7 +35,7 @@ export const getLatestProducts = TryCatch(async (req, res, next) => {
         products = JSON.parse(nodeCache.get("latest-product"));
     }
     else {
-        products = await Product.find({}).sort({ createdAt: -1 }).limit(5);
+        products = await Product.find({}).sort({ createdAt: -1 }).limit(6);
         nodeCache.set("latest-product", JSON.stringify(products));
     }
     return res.status(200).json({
@@ -65,7 +65,7 @@ export const getAdminProduct = TryCatch(async (req, res, next) => {
         products = JSON.parse(nodeCache.get("all-products"));
     }
     else {
-        products = await Product.find({});
+        products = await Product.find({}).sort({ createdAt: -1 });
         nodeCache.set("all-products", JSON.stringify(products));
     }
     return res.status(200).json({

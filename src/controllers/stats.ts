@@ -364,7 +364,7 @@ export const getBarCharts = TryCatch(async (req, res, next) => {
 
     charts = {
       users: userCount,
-      product: productCount,
+      products: productCount,
       orders: orderCount,
     };
 

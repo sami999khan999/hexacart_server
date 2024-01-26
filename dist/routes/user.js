@@ -7,7 +7,7 @@ app.post("/new", newUser);
 // routes - "/api/v1/user/all"
 app.get("/all", adminOnly, getAllUsers);
 // routes - "/api/v1/user/:id"
-app.get("/:id", adminOnly, getUser);
+app.get("/:id", getUser);
 // routes - "/api/v1/user/:id"
 app.delete("/:id", adminOnly, deleatUser);
 export default app;
