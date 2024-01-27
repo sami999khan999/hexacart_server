@@ -54,7 +54,9 @@ export const allOrders = TryCatch(async (req, res, next) => {
         orders = JSON.parse(nodeCache.get(key));
     }
     else {
-        orders = await Order.find({}).populate("user", "name");
+        orders = await Order.find({})
+            .populate("user", "name")
+            .sort({ createdAt: -1 });
         nodeCache.set(key, JSON.stringify(orders));
     }
     return res.status(200).json({

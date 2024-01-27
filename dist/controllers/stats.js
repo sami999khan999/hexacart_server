@@ -65,6 +65,7 @@ export const getDashboardStats = TryCatch(async (req, res, next) => {
         });
         const latestTransactionsPromise = Order.find({})
             .select(["orderItems", "discount", "total", "status"])
+            .sort({ createdAt: -1 })
             .limit(4);
         const [thisMonthOrders, thisMonthProducts, thisMonthUsers, lastMonthOrders, lastMonthProducts, lastMonthUsers, productsCount, usersCount, allOrders, lastSixMonthOrder, catagories, femaleUsersCount, latestTransactions,] = await Promise.all([
             thisMonthOrdersPromise,

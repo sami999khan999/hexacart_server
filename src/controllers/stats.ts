@@ -82,6 +82,7 @@ export const getDashboardStats = TryCatch(async (req, res, next) => {
 
     const latestTransactionsPromise = Order.find({})
       .select(["orderItems", "discount", "total", "status"])
+      .sort({ createdAt: -1 })
       .limit(4);
 
     const [

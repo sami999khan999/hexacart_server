@@ -34,7 +34,7 @@ export const getAllUsers = TryCatch(async (req, res, next) => {
 });
 export const getUser = TryCatch(async (req, res, next) => {
     const _id = req.params.id;
-    const user = await User.findById({ _id });
+    const user = await User.findById({ _id }).sort({ createdAt: -1 });
     if (!user) {
         return next(new ErrorHandeler("Invalid ID", 400));
     }
