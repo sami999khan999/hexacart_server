@@ -1,6 +1,6 @@
 # HexaCart Project
 
-HexaCart is a MEARN (MongoDB, Express.js, Angular, React, Node.js) project designed to [provide a brief description of the project].
+HexaCart is a MEARN (MongoDB, Express.js, Angular, React, Node.js) project designed to bring you a cutting-edge, feature-rich online marketplace.
 
 # Frontend
 
